@@ -1,0 +1,9 @@
+dataset_dir: "/home/vivid/mod/mod_data/visualize_pointcloud"
+txt_file: "/val.txt"
+
+search_by_distance: true
+max_distance: -30
+min_distance: -40
+
+search_by_name: false
+name: "023530"
