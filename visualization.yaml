@@ -1,9 +1,32 @@
+# Dataset config
 dataset_dir: "/home/vivid/mod/mod_data/visualize_pointcloud"
 txt_file: "/val.txt"
+is_gt_provided: true
 
-search_by_distance: true
-max_distance: -30
-min_distance: -40
+# Search 
+search_by_distance: false
+max_distance: -50
+min_distance: -60
 
 search_by_name: false
 name: "023530"
+
+search_by_unmatched: true
+
+# Evaluation
+eval_mode: false # if "true", is_gt_provided need to set to "true"
+search_unmatched_old: false
+search_unmatched_new: false
+
+
+# Camera parameters
+window_length: 1920
+window_height: 1000
+
+camera_height: 40
+view_x: -33.2413
+view_y: 1.839
+view_z: -47.4536
+up_x: 0.99335
+up_y: -0.0467428
+up_z: 0.105216
