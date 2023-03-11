@@ -16,11 +16,13 @@ int main() {
 
     Metric_calculator metric_cal;
     metric_cal.get_matched_frame_with_distance(visualizer.label_list, visualizer.pred_old_list, visualizer.pred_new_list);
-    metric_cal.show_matched_in_distance(true);
+    metric_cal.show_metrics(true);
     
     // start the process in loop
     if(visualizer.search_by_unmatched)
-        visualizer.get_display_start_frames(metric_cal.get_unmatched_pred(true));
+        visualizer.get_display_start_frames(metric_cal.get_unmatched_pred_frames(visualizer.is_new_model));
+    else if (visualizer.search_by_false_positive)
+        visualizer.get_display_start_frames(metric_cal.get_false_positive_frames(visualizer.is_new_model));
     else
         visualizer.get_display_start_frames();
     visualizer.cloud_visualization();

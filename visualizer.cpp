@@ -7,18 +7,21 @@ Visualizer::Visualizer(){}
 
 
 void Visualizer::load_pointcloud(pcl::visualization::PCLVisualizer::Ptr &viewer, int frame_idx) {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZ> (pcd_list[frame_idx], *cloud) == -1) //* load the file
+    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZI>);
+    if (pcl::io::loadPCDFile<pcl::PointXYZI> (pcd_list[frame_idx], *cloud) == -1) //* load the file
     {
-        PCL_ERROR ("Couldn't read file test_pcd.pcd \n");
+        PCL_ERROR ("Couldn't read file .pcd \n");
     }
     cout << "File: " << pcd_list[frame_idx] << " ,numbers of points: " << cloud->width * cloud->height  << endl;
     viewer->removeAllShapes();
     viewer->removeAllPointClouds();
     // display cloud
     viewer->setBackgroundColor (0, 0, 0);
-    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color(cloud, 255, 255, 255);
-    viewer->addPointCloud<pcl::PointXYZ> (cloud, single_color, "sample cloud");
+    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZI> single_color(cloud, 255, 255, 255);
+    //pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_color(cloud, "intensity");
+    //pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+    //viewer->addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
+    viewer->addPointCloud<pcl::PointXYZI> (cloud, single_color, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
     viewer->addCoordinateSystem (1.0);
     viewer->initCameraParameters ();
@@ -67,26 +70,33 @@ void Visualizer::cloud_visualization()
     vector<vector<float>> pred_old_labels = draw_cube(viewer, pred_old_list[frame_idx], 1);
     vector<vector<float>> pred_new_labels = draw_cube(viewer, pred_new_list[frame_idx], 2);
 
+    int distance = 0;
+    if(pred_new_labels.size() > 0)
+        distance = pred_new_labels[0][3];
+    //viewer->addText(to_string(distance), 0, window_height/2, 30,  1, 0, 0, "distance_text");
     viewer->addText(to_string(int(gt_labels[0][3])), 0, window_height/2, 30,  1, 0, 0, "distance_text");
     viewer->setSize (window_length, window_height);
     viewer->setCameraPosition(gt_labels[0][3], gt_labels[0][4], gt_labels[0][5] + camera_height,  view_x, view_y, view_z, 
                                 up_x, up_y, up_z);
-    
+    //viewer->setCameraPosition(0, 0, 0 + camera_height,  view_x, view_y, view_z, 
+    //                            up_x, up_y, up_z);  
     while (!viewer->wasStopped ())
     {
         viewer->spin();
     }
     //viewer->close();
     
-    if(search_by_distance || search_by_unmatched) {
+    if(search_by_distance || search_by_unmatched || search_by_false_positive) {
         f_id++;
         if(f_id < display_idx_storage.size())
             frame_idx = display_idx_storage[f_id];
         else {
             if(search_by_distance)
                 cout << "Search by distance is done" << endl;
-            else
+            else if(search_by_unmatched)
                 cout << "Search by unmatched is done" << endl;
+            else if(search_by_false_positive)
+                cout << "Search by false positive is done" << endl;
             exit(0);
         }
 

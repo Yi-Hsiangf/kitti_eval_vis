@@ -20,6 +20,8 @@ public:
     bool search_by_name;
     std::string name;
     bool search_by_unmatched;
+    bool search_by_false_positive;
+    bool is_new_model;
 
     std::vector<std::string> pcd_list;
     std::vector<std::string> label_list;

@@ -14,7 +14,8 @@ void Dataloader::load_config(YAML::Node config) {
     search_by_name = config["search_by_name"].as<bool>();
     name = config["name"].as<string>();
     search_by_unmatched = config["search_by_unmatched"].as<bool>();
-    
+    search_by_false_positive = config["search_by_false_positive"].as<bool>();   
+    is_new_model = config["is_new_model"].as<bool>();
 
     camera_height = config["camera_height"].as<float>();
     view_x = config["view_x"].as<float>();
@@ -26,12 +27,12 @@ void Dataloader::load_config(YAML::Node config) {
 
     window_length = config["window_length"].as<int>();
     window_height = config["window_height"].as<int>();
+
+    assert((!search_by_name || !search_by_distance || !search_by_unmatched || !search_by_false_positive) && "ERROR searching query");
 }
 
 
 void Dataloader::get_display_start_frames() {
-    assert((!search_by_name || !search_by_distance) && "search_by_name and search_by_distance both True");
-
     if(search_by_name) {
         frame_idx = name_to_idx_map[name];
     }
@@ -51,8 +52,8 @@ void Dataloader::get_display_start_frames() {
 }
 
 
-void Dataloader::get_display_start_frames(vector<int>unmatched_pred_idx) {
-    display_idx_storage = unmatched_pred_idx;
+void Dataloader::get_display_start_frames(vector<int>query_frames) {
+    display_idx_storage = query_frames;
     cout << "Displaying " << display_idx_storage.size() << " frames" << endl;
     frame_idx = display_idx_storage[f_id]; // f_id = 0
 }
