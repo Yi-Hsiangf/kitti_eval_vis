@@ -12,7 +12,7 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable (kitti_vis kitti_vis.cpp)
+add_executable (kitti_vis kitti_vis.cpp metric_calculator.cpp visualizer.cpp dataloader.cpp)
 target_link_libraries(kitti_vis yaml-cpp)
 
 target_link_libraries(kitti_vis ${VTK_LIBRARIES})

@@ -1,9 +1,31 @@
+# Dataset config
 dataset_dir: "/home/vivid/mod/mod_data/visualize_pointcloud"
+#dataset_dir: "/home/vivid/mod/Lidar/cam_lidar_fusion_data/early_fusion_data/collecting/hawaii_long_distance"
+#txt_file: "/name.txt"
+#dataset_dir: "/home/vivid/mod/mod_data/LVMS_dataset/data/val/pcl_original"
 txt_file: "/val.txt"
 
-search_by_distance: true
+
+# Search 
+search_by_distance: false
 max_distance: -30
 min_distance: -40
 
-search_by_name: false
-name: "023530"
+search_by_name: true
+name: "021000"
+
+search_by_unmatched: false
+search_by_false_positive: false
+is_new_model: no
+
+# Camera parameters
+window_length: 1920
+window_height: 1000
+
+camera_height: 40
+view_x: -33.2413
+view_y: 1.839
+view_z: -47.4536
+up_x: 0.99335
+up_y: -0.0467428
+up_z: 0.105216
