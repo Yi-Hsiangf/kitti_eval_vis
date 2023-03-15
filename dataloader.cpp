@@ -7,7 +7,11 @@ Dataloader::Dataloader() {}
 
 void Dataloader::load_config(YAML::Node config) {
     dataset_dir = config["dataset_dir"].as<string>();
-    txt_file = config["txt_file"].as<string>();
+    label_name = config["label_name"].as<string>();
+    fused_name = config["fused_name"].as<string>();
+    pcl_dir_name = config["pcl_dir_name"].as<string>();
+    inference_dir_name1 = config["inference_dir_name1"].as<string>();
+    inference_dir_name2 = config["inference_dir_name2"].as<string>();
     search_by_distance = config["search_by_distance"].as<bool>();
     max_distance = config["max_distance"].as<int>();
     min_distance = config["min_distance"].as<int>();
@@ -60,23 +64,68 @@ void Dataloader::get_display_start_frames(vector<int>query_frames) {
 
 
 
-void Dataloader::get_pcd_and_label_list() {
-    string textfile = dataset_dir + txt_file;
-    std::ifstream in_file(textfile);
-    string line;
-    while (getline(in_file, line)) {
-        string pcd_file = dataset_dir + "/pcl/" + line + ".pcd";
-        string label_file = dataset_dir + "/label/" + line + ".txt";
-        string pred_old_file = dataset_dir + "/pred_old/" + line + ".txt";
-        string pred_new_file = dataset_dir + "/pred_new/" + line + ".txt";
-        
-        name_to_idx_map[line] = pcd_list.size();
-        pcd_list.push_back(pcd_file);
-        label_list.push_back(label_file);
-        pred_old_list.push_back(pred_old_file);
-        pred_new_list.push_back(pred_new_file);
+void Dataloader::get_pcd_and_label_list(bool is_fused_label) {
+    string pcd_file, label_file, pred_old_file, pred_new_file;
+    if(!is_fused_label) {
+        string text_file = dataset_dir + label_name;
+        std::ifstream in_file(text_file);
+        string line;
+        while (getline(in_file, line)) {
+            pcd_file = dataset_dir + pcl_dir_name + line + ".pcd";
+            label_file = dataset_dir + "/label/" + line + ".txt";
+            pred_old_file = dataset_dir + inference_dir_name1 + line + ".txt";
+            pred_new_file = dataset_dir + inference_dir_name2 + line + ".txt";
+            
+            name_to_idx_map[line] = pcd_list.size();
+            pcd_list.push_back(pcd_file);
+            label_list.push_back(label_file);
+            pred_old_list.push_back(pred_old_file);
+            pred_new_list.push_back(pred_new_file);
+        }
+    }
+    else {
+        // Include fused dataset
+        std::unordered_set<int> label_name_set;
+        string label_file = dataset_dir + label_name;
+        std::ifstream in_label_file(label_file);
+        string line;
+        while (getline(in_label_file, line)) {
+            label_name_set.insert(stoi(line));
+        }
+
+        string fused_file = dataset_dir + fused_name;
+        std::ifstream in_fused_file(fused_file);
+        while (getline(in_fused_file, line)) {
+            int id = stoi(line);
+            if(label_name_set.count(id) > 0) {
+                pcd_file = dataset_dir + pcl_dir_name + line + ".pcd";
+                label_file = dataset_dir + "/label/" + line + ".txt";
+                pred_old_file = dataset_dir + inference_dir_name1 + line + ".txt";
+                pred_new_file = dataset_dir + inference_dir_name2 + line + ".txt";
+            }
+            else {
+                int remain = id % 5;
+                if(remain >= 3)
+                    id = id + 5 - (remain);
+                else
+                    id = id - remain; 
+                string label_id = to_string(id);
+                label_id = string(6 - label_id.size(), '0') + label_id;
+                pcd_file = dataset_dir + "/pcl/" + line + ".pcd";
+
+                label_file = dataset_dir + "/label/" + label_id + ".txt";
+                pred_old_file = dataset_dir + inference_dir_name1 + label_id + ".txt";
+                pred_new_file = dataset_dir + inference_dir_name2 + line + ".txt";
+            }
+            name_to_idx_map[line] = pcd_list.size();
+            pcd_list.push_back(pcd_file);
+            label_list.push_back(label_file);
+            pred_old_list.push_back(pred_old_file);
+            pred_new_list.push_back(pred_new_file);
+        }
     }
 }
+
 
 vector<vector<float>> Dataloader::get_labels(string label_file) {
     vector<vector<float>> labels;

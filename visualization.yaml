@@ -1,22 +1,34 @@
 # Dataset config
-dataset_dir: "/home/vivid/mod/mod_data/visualize_pointcloud"
-#dataset_dir: "/home/vivid/mod/Lidar/cam_lidar_fusion_data/early_fusion_data/collecting/hawaii_long_distance"
-#txt_file: "/name.txt"
-#dataset_dir: "/home/vivid/mod/mod_data/LVMS_dataset/data/val/pcl_original"
-txt_file: "/val.txt"
 
+#dataset_dir: "/home/vivid/mod/mod_data/LVMS_dataset/data/val/pcl_original"
+
+
+
+#dataset_dir: "/home/vivid/mod/mod_data/visualize_pointcloud"
+#label_name: "/val.txt"
+#fused_name: "/val.txt"
+#inference_dir_name1: "/pred_old/"
+#inference_dir_name2: "/pred_new/"
+
+
+dataset_dir: "/home/vivid/mod/Lidar/cam_lidar_fusion_data/early_fusion_data/hawaii_data/fused_dataset_evaluation"
+label_name: "/test.txt"
+fused_name: "/test.txt"
+inference_dir_name1: "/rcnn/final_result/data/"
+inference_dir_name2: "/fusion/"
+pcl_dir_name: "/pcl_filtered/"
 
 # Search 
 search_by_distance: false
-max_distance: -30
-min_distance: -40
+max_distance: 250
+min_distance: 200
 
-search_by_name: true
+search_by_name: false
 name: "021000"
 
 search_by_unmatched: false
 search_by_false_positive: false
-is_new_model: no
+is_new_model: yes
 
 # Camera parameters
 window_length: 1920

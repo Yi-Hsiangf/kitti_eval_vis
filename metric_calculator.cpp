@@ -252,7 +252,7 @@ void  Metric_calculator::show_metrics(bool is_compared_two_model) {
         cout << "  distance from -10 to 10 in 1st model: " << pred_new_distance_to_number_map[0] << "/" << gt_distance_to_number_map[0] << 
         " in 2nd model: " << pred_old_distance_to_number_map[0] << "/" << gt_distance_to_number_map[0] << endl;
 
-    for(int distance=10;distance<100;distance+=10) {
+    for(int distance=10;distance<260;distance+=10) {
         if(!is_compared_two_model)
             cout << "  distance from " << distance << " to " << distance + 10 << ": " 
             << pred_new_distance_to_number_map[distance] << "/" << gt_distance_to_number_map[distance] << endl;

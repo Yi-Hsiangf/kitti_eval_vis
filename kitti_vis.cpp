@@ -11,8 +11,9 @@ int main() {
     YAML::Node config = YAML::LoadFile("../visualization.yaml");
     Visualizer visualizer;
     visualizer.load_config(config);
-    visualizer.get_pcd_and_label_list();
-
+    // get label from both lidar-only
+    visualizer.get_pcd_and_label_list(false);
+    // get label from one fused dataset, need to match the closest index
 
     Metric_calculator metric_cal;
     metric_cal.get_matched_frame_with_distance(visualizer.label_list, visualizer.pred_old_list, visualizer.pred_new_list);
@@ -29,4 +30,3 @@ int main() {
 
     return (0);
 }
-   

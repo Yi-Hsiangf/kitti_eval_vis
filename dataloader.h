@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -13,7 +14,11 @@ class Dataloader {
 public:
     // variable
     std::string dataset_dir;
-    std::string txt_file;
+    std::string label_name;
+    std::string fused_name;
+    std::string pcl_dir_name;
+    std::string inference_dir_name1;
+    std::string inference_dir_name2;
     bool search_by_distance;
     int max_distance;
     int min_distance;
@@ -47,7 +52,7 @@ public:
     void load_config(YAML::Node config);
     void get_display_start_frames();
     void get_display_start_frames(std::vector<int>unmatched_pred_idx);
-    void get_pcd_and_label_list();
+    void get_pcd_and_label_list(bool is_fused_label);
 
     std::vector<std::vector<float>> get_labels(std::string label_file);
 

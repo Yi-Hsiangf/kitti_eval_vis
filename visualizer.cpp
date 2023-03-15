@@ -4,8 +4,7 @@ using namespace std;
 
 Visualizer::Visualizer(){}
 
-
-
+ 
 void Visualizer::load_pointcloud(pcl::visualization::PCLVisualizer::Ptr &viewer, int frame_idx) {
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZI>);
     if (pcl::io::loadPCDFile<pcl::PointXYZI> (pcd_list[frame_idx], *cloud) == -1) //* load the file
@@ -46,7 +45,7 @@ vector<vector<float>> Visualizer::draw_cube(pcl::visualization::PCLVisualizer::P
         cube = "pred_new_car_cube";
         color_b = 1;
     }
-
+    
     for(int i=0;i<labels.size();i++) {
         string cube_id = cube + to_string(i);
         Eigen::AngleAxisf rotation_vector(labels[i][6], Eigen::Vector3f(0, 0, 1));
@@ -56,7 +55,6 @@ vector<vector<float>> Visualizer::draw_cube(pcl::visualization::PCLVisualizer::P
         viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, cube_id);
         viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color_r, color_g, color_b, cube_id);
     }
-    
     return labels;
 }
 
@@ -69,6 +67,8 @@ void Visualizer::cloud_visualization()
     vector<vector<float>> gt_labels = draw_cube(viewer, label_list[frame_idx], 0);
     vector<vector<float>> pred_old_labels = draw_cube(viewer, pred_old_list[frame_idx], 1);
     vector<vector<float>> pred_new_labels = draw_cube(viewer, pred_new_list[frame_idx], 2);
+
+
 
     int distance = 0;
     if(pred_new_labels.size() > 0)
